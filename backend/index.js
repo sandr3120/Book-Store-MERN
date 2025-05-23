@@ -77,3 +77,29 @@ app.get("/books/:id", async (request, response) => {
     response.status(500).send({ message: error.message });
   }
 });
+
+//Updating Books By ID
+app.put("/books/:id", async (request, response) => {
+  try {
+    if (
+      !request.body.title ||
+      !request.body.author ||
+      !request.body.publishYear
+    ) {
+      return response
+        .status(400)
+        .send({ message: "Specify all fields: title, author and publishYear" });
+    }
+
+    const { id } = request.params;
+    const result = await Book.findByIdAndUpdate(id, request.body);
+    if(!result){
+        return response.status(404).send({message:'Book Not Found'});
+    }
+        return response.status(200).send({message:'Book Updated Successfully'});
+
+  } catch (error) {
+    console.log(error.message);
+    response.status(500).send({ message: error.message });
+  }
+});
