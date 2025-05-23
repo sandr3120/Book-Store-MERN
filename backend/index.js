@@ -19,11 +19,13 @@ mongoose
 
 app.use(express.json());
 
+//Default API
 app.get("/", (request, response) => {
   console.log(request);
   return response.status(234).send(`Welcome to Book Store`);
 });
 
+//Adding Books to MongoDB
 app.post("/books", async (request, response) => {
   try {
     if (
@@ -50,13 +52,26 @@ app.post("/books", async (request, response) => {
   }
 });
 
+//Getting All Books from MongoDB
 app.get("/books", async (request, response) => {
   try {
     const books = await Book.find({});
     return response.status(200).json({
-        count: books.length,
-        data: books
+      count: books.length,
+      data: books,
     });
+  } catch (error) {
+    console.log(error.message);
+    response.status(500).send({ message: error.message });
+  }
+});
+
+//Getting Book by ID from MongoDB
+app.get("/books/:id", async (request, response) => {
+  try {
+    const { id } = request.params;
+    const book = await Book.findById(id);
+    return response.status(200).json(book);
   } catch (error) {
     console.log(error.message);
     response.status(500).send({ message: error.message });
