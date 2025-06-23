@@ -6,6 +6,12 @@ import cors from "cors";
 
 const app = express();
 
+app.use(cors());
+
+app.use(express.json());
+
+app.use("/books", booksRouter);
+
 mongoose
   .connect(uri)
   .then(() => {
@@ -24,14 +30,3 @@ app.get("/", (request, response) => {
   return response.status(234).send(`Welcome to Book Store`);
 });
 
-app.use(express.json());
-
-app.use("/books", booksRouter);
-
-app.use(
-  cors({
-    origin: "https://localhost:3000",
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type"],
-  })
-);
